@@ -1,0 +1,54 @@
+{% extends 'emp_base.html' %}
+
+{% block main %}
+
+<div class="card shadow m-3">
+    <div class="card-body">
+        <a href="{% url 'my_qualities'%}" class="btn btn-primary float-right btn-sm">View My Qualities</a>
+        <h5 class="p-2 text-danger" style="border-bottom : 2px solid orange">Edit My Qualities</h5>
+
+        <div class="container-fluid">
+            <form method="post">
+                {% csrf_token %}
+            <table class="table table-bordered">
+                <tr>
+                    <th>My Hard Working Experiences</th>
+                    <td><input type="text" name="hardworking" class="form-control" value="{{qualities.hardworking}}"></td>
+                </tr>
+                <tr>
+                    <th>My Flexibility</th>
+                    <td><input type="text" name="flexibility" class="form-control" value="{{qualities.flexibility}}"></td>
+                </tr>
+                <tr>
+                    <th>My Attitude</th>
+                    <td><input type="text" name="attitude" class="form-control" value="{{qualities.attitude}}"></td>
+                </tr>
+                <tr>
+                    <th>My Reliability</th>
+                    <td><input type="text" name="reliability" class="form-control" value="{{qualities.reliability}}"></td>
+                </tr>
+                <tr>
+                    <th>My Attention To Detail</th>
+                    <td><input type="text" name="attentiontodetail" class="form-control" value="{{qualities.attentiontodetail}}"></td>
+                </tr>
+            </table>
+                <center><input type="submit" value="Submit" class="btn btn-primary  px-3"></center>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if error == "no" %}
+<script>
+    alert('Qualities Details Updated Successfully');
+    window.location.href = ('{% url 'my_qualities' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+    alert('Something went wrong , Try Again...');
+</script>
+{% endif %}
+
+
+{% endblock %}

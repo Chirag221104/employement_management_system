@@ -1,0 +1,54 @@
+{% extends 'emp_base.html' %}
+
+{% block main %}
+
+<div class="card shadow m-3">
+    <div class="card-body">
+        <a href="{% url 'my_experience'%}" class="btn btn-primary float-right btn-sm">View My Work Experience</a>
+        <h5 class="p-2 text-danger" style="border-bottom : 2px solid orange">Edit My Work Experience</h5>
+
+        <div class="container-fluid">
+            <form method="post">
+                {% csrf_token %}
+            <table class="table table-bordered">
+                <tr>
+                    <th>My Skills</th>
+                    <td><input type="text" name="multiskilled" class="form-control" value="{{experience.multiskilled}}"></td>
+                </tr>
+                <tr>
+                    <th>My Specialization</th>
+                    <td><input type="text" name="specialization" class="form-control" value="{{experience.specialization}}"></td>
+                </tr>
+                <tr>
+                    <th>My Experience in Years</th>
+                    <td><input type="text" name="yearsofexp" class="form-control" value="{{experience.yearsofexp}}"></td>
+                </tr>
+                <tr>
+                    <th>My Major</th>
+                    <td><input type="text" name="major" class="form-control" value="{{experience.major}}"></td>
+                </tr>
+                <tr>
+                    <th>Comment About Yourself</th>
+                    <td><textarea name="comment" class="form-control" id="inputComment" rows="3">{{ experience.comment }}</textarea></td>
+                </tr>
+            </table>
+                <center><input type="submit" value="Submit" class="btn btn-primary  px-3"></center>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if error == "no" %}
+<script>
+    alert('Experience Details Updated Successfully');
+    window.location.href = ('{% url 'my_experience' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+    alert('Something went wrong , Try Again...');
+</script>
+{% endif %}
+
+
+{% endblock %}

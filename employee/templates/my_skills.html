@@ -1,0 +1,38 @@
+{% extends 'emp_base.html' %}
+
+{% block main %}
+
+<div class="card shadow m-3">
+    <div class="card-body">
+        <a href="{% url 'edit_myskills' %}" class="btn btn-primary float-right btn-sm">Edit My skills</a>
+        <h5 class="p-2 text-danger" style="border-bottom : 2px solid orange">My Working Skills</h5>
+
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <tr>
+                    <th>My Technical Skills</th>
+                    <td>{{skills.technical_skills}}</td>
+                </tr>
+                <tr>
+                    <th>My Physical Skills</th>
+                    <td>{{skills.physical_skills}}</td>
+                </tr>
+                <tr>
+                    <th>My Time Management Skills</th>
+                    <td>{{skills.time_management_skills}}</td>
+                </tr>
+                <tr>
+                    <th>My Communication Skills</th>
+                    <td>{{skills.communication_skills}}</td>
+                </tr>
+                <tr>
+                    <th>My Customer Handling Skills</th>
+                    <td>{{skills.customer_handling_skills}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

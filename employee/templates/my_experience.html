@@ -1,0 +1,38 @@
+{% extends 'emp_base.html' %}
+
+{% block main %}
+
+<div class="card shadow m-3">
+    <div class="card-body">
+        <a href="{% url 'edit_myexperience' %}" class="btn btn-primary float-right btn-sm">Edit My Experience</a>
+        <h5 class="p-2 text-danger" style="border-bottom : 2px solid orange">My Work Experience</h5>
+
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <tr>
+                    <th>My Skills</th>
+                    <td>{{experience.multiskilled}}</td>
+                </tr>
+                <tr>
+                    <th>My Specialization</th>
+                    <td>{{experience.specialization}}</td>
+                </tr>
+                <tr>
+                    <th>My Experience in Years</th>
+                    <td>{{experience.yearsofexp}}</td>
+                </tr>
+                <tr>
+                    <th>My Major</th>
+                    <td>{{experience.major}}</td>
+                </tr>
+                <tr>
+                    <th>Comment About Yourself</th>
+                    <td>{{experience.comment}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
