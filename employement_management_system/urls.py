@@ -31,5 +31,11 @@ urlpatterns = [
     path('edit_myexperience/',edit_myexperience,name='edit_myexperience'),
     path('my_skills/', my_skills, name='my_skills'),
     path('edit_myskills/',edit_myskills,name='edit_myskills'),
+    path('user_signup/',user_signup,name='user_signup'),
+    path('user_login/',user_login,name='user_login'),
+    path('user_home/',user_home,name='user_home'),
+    path('emp_change_password/',emp_change_password,name='emp_change_password'),
+    path('user_change_password/',user_change_password,name='user_change_password'),
+    path('user_profile/',user_profile,name='user_profile'),
 ]
 

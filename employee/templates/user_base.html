@@ -66,13 +66,9 @@
       <center><img src="{% static 'images/logo.jpeg' %}" width="100" height="100" class="img-thumbnail rounded-circle my-3"></center>
 
       <div class="list-group">
-        <a href="{% url 'emp_home' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/emp_home/' %} active {% endif %}">Dashboard</a>
-        <a href="{% url 'profile' %}" class="list-group-item list-group-item-danger list-group-item-action text-center {% if request.path == '/profile/' %} active {% endif %}">Profile</a>
-        <a href="{% url 'my_experience' %}" class="list-group-item list-group-item-info list-group-item-action text-center {% if request.path == '/my_experience/' %} active {% endif %}">My Experience</a>
-        <a href="{% url 'edit_myexperience' %}" class="list-group-item list-group-item-primary list-group-item-action text-center {% if request.path == '/edit_myexperience/' %} active {% endif %}">Edit My Experience</a>
-        <a href="{% url 'my_skills' %}" class="list-group-item list-group-item-secondary list-group-item-action text-center {% if request.path == '/my_skills/' %} active {% endif %}">My Skills</a>
-        <a href="{% url 'edit_myskills' %}" class="list-group-item list-group-item-secondary list-group-item-action text-center {% if request.path == '/edit_myskills/' %} active {% endif %}">Edit My Skills</a>
-        <a href="{% url 'emp_change_password' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/emp_change_password/' %} active {% endif %}">Change Password</a>
+        <a href="{% url 'user_home' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/user_home/' %} active {% endif %}">Dashboard</a>
+        <a href="{% url 'user_profile' %}" class="list-group-item list-group-item-danger list-group-item-action text-center {% if request.path == '/user_profile/' %} active {% endif %}">Profile</a>
+        <a href="{%url 'user_change_password' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/user_change_password/' %} active {% endif %}">Change Password</a>
         <a href="{% url 'logout' %}" class="list-group-item list-group-item-warning list-group-item-action text-center">Logout</a>
       </div>
     </div>
