@@ -35,7 +35,7 @@
 {% if error == "no" %}
 <script>
     alert('Logged In Successful');
-    window.location.href = ('{% url 'emp_home' %}');
+    window.location = ('{% url 'emp_home' %}');
 </script>
 {% endif %}
 {% if error == "yes" %}

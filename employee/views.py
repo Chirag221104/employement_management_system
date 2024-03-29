@@ -51,6 +51,25 @@ def emp_home(request):
         return redirect('emp_login')
     return render(request, 'emp_home.html')
 
+def emp_change_password(request):
+    if not request.user.is_authenticated:
+        return redirect('emp_login')
+    error = ""
+    user = request.user
+    if request.method == "POST":
+        c = request.POST['currentpassword']
+        n = request.POST['newpassword']
+        try:
+            if user.check_password(c):
+                user.set_password(n)
+                user.save()
+                error = "no"
+            else:
+                error = "not"
+        except:
+            error = "yes"
+    return render(request, 'emp_change_password.html', locals())
+
 
 def Logout(request):
     logout(request)
@@ -195,42 +214,24 @@ def user_signup(request):
 def user_login(request):
     error = ""
     if request.method == "POST":
-        u = request.POST['email']
-        p = request.POST['password']
-        user_signup = authenticate(username=u, password=p)
-        print(user_signup)
-        if user_signup:
-            login(request, user_signup)
-
-            error = "no"
+        email = request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            return redirect('user_home')
         else:
-            error = "yes"
-    return render(request, 'user_login.html', locals())
+            # Set appropriate error message.
+            error = "Invalid email or password"
+    return render(request, 'user_login.html', {'error': error})
 
 
-def emp_change_password(request):
-    if not request.user.is_authenticated:
-        return redirect('emp_login')
-    error = ""
-    user = request.user
-    if request.method == "POST":
-        c = request.POST['currentpassword']
-        n = request.POST['newpassword']
-        try:
-            if user.check_password(c):
-                user.set_password(n)
-                user.save()
-                error = "no"
-            else:
-                error = "not"
-        except:
-            error = "yes"
-    return render(request, 'emp_change_password.html', locals())
 
 
 def user_change_password(request):
     if not request.user.is_authenticated:
-        return redirect('emp_login')
+        return redirect('user_login')
     error = ""
     user = request.user_signup
     if request.method == "POST":
@@ -252,8 +253,8 @@ def user_profile(request):
     if not request.user.is_authenticated:
         return redirect('user_login')
     error = ""
-    user = request.user_signup
-    employee = UserSignup.objects.get(user=user)
+    # Retrieve the UserSignup object associated with the user
+    user_signup = request.user.user_signup
     if request.method == "POST":
         fn = request.POST['firstname']
         ln = request.POST['lastname']
@@ -262,18 +263,18 @@ def user_profile(request):
         gender = request.POST['gender']
         useraddress = request.POST['useraddress']
 
-        employee.user_signup.first_name = fn
-        employee.user_signup.last_name = ln
-        employee.contact = contact
-        employee.gender = gender
-        employee.useraddress = useraddress
+        # Update the fields of UserSignup object
+        user_signup.first_name = fn
+        user_signup.last_name = ln
+        user_signup.contact = contact
+        user_signup.gender = gender
+        user_signup.useraddress = useraddress
 
         if ddate:
-            employee.dateofbirth = ddate
+            user_signup.dateofbirth = ddate
 
         try:
-            employee.save()
-            employee.user_signup.save()
+            user_signup.save()
             error = "no"
         except:
             error = "yes"
@@ -284,3 +285,47 @@ def user_home(request):
     if not request.user.is_authenticated:
         return redirect('user_login')
     return render(request, 'user_home.html')
+
+
+def admin_login(request):
+    error = ""
+    if request.method == "POST":
+        u = request.POST.get('username')
+        p = request.POST.get('pwd')
+        user = authenticate(username=u, password=p)
+        if user is not None and user.is_staff:
+            login(request, user)
+            error = "no"
+        else:
+            error = "yes"
+    return render(request, 'admin_login.html', {'error': error})
+
+def admin_home(request):
+    if not request.user.is_authenticated:
+        return redirect('admin_login')
+    return render(request, 'admin_home.html')
+
+def admin_change_password(request):
+    if not request.user.is_authenticated:
+        return redirect('admin_login')
+    error = ""
+    user = request.user
+    if request.method == "POST":
+        c = request.POST['currentpassword']
+        n = request.POST['newpassword']
+        try:
+            if user.check_password(c):
+                user.set_password(n)
+                user.save()
+                error = "no"
+            else:
+                error = "not"
+        except:
+            error = "yes"
+    return render(request, 'admin_change_password.html', locals())
+
+def all_employees(request):
+    if not request.user.is_authenticated:
+        return redirect('admin_login')
+    employee = EmployeeDetail.objects.all()
+    return render(request, 'all_employees.html',locals())
