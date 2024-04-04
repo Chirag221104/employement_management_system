@@ -7,8 +7,8 @@
         <h5 class="p-3 text-danger" style="border-bottom : 2px solid orange">Employee Details</h5>
 
         <div class="container-fluid">
-            <table class="table" id="example">
-                <thead>
+            <table class="table table-bordered table-hover" id="example">
+                <thead class="text-light bg-primary">
                 <tr>
                     <th>S No.</th>
                     <th>Emp Code</th>
@@ -30,7 +30,7 @@
                     <td>{{i.user.username}}</td>
                     <td>{{i.contact}}</td>
                     <td>{{i.joiningdate}}</td>
-                    <td>{{forloop.counter}}</td>
+
                 </tr>
                 {% endfor %}
                 </tbody>

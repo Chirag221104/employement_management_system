@@ -209,7 +209,6 @@ def user_signup(request):
     else:
         return render(request, 'user_signup.html')
 
-
 def user_login(request):
     error = None  # Initialize error variable
     if request.method == "POST":
@@ -226,13 +225,12 @@ def user_login(request):
             login(request, user)
             request.session.set_expiry(1800)
             error = "no"
-            return render(request, 'user_login.html', {'error': error})
+            return redirect('user_home')  # Redirect to user_home page upon successful login
         else:
             error = "yes"  # Set error to 'yes' if password does not match
             return render(request, 'user_login.html', {'error': error})
     else:
         return render(request, 'user_login.html')
-
 
 def user_change_password(request):
     if not request.user.is_authenticated:

@@ -1,9 +1,8 @@
 {% include 'header.html' %}
 
-
 <div class="card shadow m-5">
     <div class="card-body">
-        <h5 class="p-2 text-danger" style="border-bottom : 2px solid orange">User Login</h5>
+        <h5 class="p-2 text-danger" style="border-bottom: 2px solid orange">User Login</h5>
 
         <div class="container-fluid">
             <form method="post">
@@ -12,34 +11,32 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Email ID</label>
-                            <input type="email" name="email" class="form-control" placeholder="Enter Your Email ID"  required>
+                            <input type="email" name="email" class="form-control" placeholder="Enter Your Email ID" required>
                         </div>
                     </div>
                 </div>
-                 <div class="form-row">
+                <div class="form-row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="Enter Your Password"  required>
+                            <input type="password" name="password" class="form-control" placeholder="Enter Your Password" required>
                         </div>
                     </div>
-                 </div>
+                </div>
 
-
-                  <input type="submit" value="Login" class="m-2 px-3 btn btn-primary">
+                <input type="submit" value="Login" class="m-2 px-3 btn btn-primary">
             </form>
         </div>
     </div>
 </div>
 
-{% if error == "no" %}
+{% if error %}
 <script>
+    {% if error == "yes" %}
+    alert('Invalid Login Credentials , Try Again...');
+    {% elif error == "no" %}
     alert('Logged In Successful');
     window.location.href = ('{% url 'user_home' %}');
-</script>
-{% endif %}
-{% if error == "yes" %}
-<script>
-    alert('Invalid Login Credentials , Try Again...');
+    {% endif %}
 </script>
 {% endif %}

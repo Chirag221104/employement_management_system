@@ -40,5 +40,5 @@ urlpatterns = [
     path('admin_home/',admin_home,name='admin_home'),
     path('admin_change_password/',admin_change_password,name='admin_change_password'),
     path('all_employees/',all_employees,name='all_employees'),
-]
 
+]
