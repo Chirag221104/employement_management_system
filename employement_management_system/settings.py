@@ -52,6 +52,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'employement_management_system.urls'
 
+LOGIN_URL = 'user_login'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

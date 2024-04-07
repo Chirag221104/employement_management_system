@@ -3,10 +3,12 @@ from django.shortcuts import render, redirect
 from .models import *
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from .models import EmployeeDetail, EmployeeExperience, EmployeeSkills, UserSignup
+from .models import EmployeeDetail, EmployeeExperience, EmployeeSkills, UserSignup, Comment
+from .forms import CommentForm
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-
 
 
 # Create your views here.
@@ -96,6 +98,7 @@ def profile(request):
         dept = request.POST['department']
         designation = request.POST['designation']
         contact = request.POST['contact']
+        major = request.POST['major']
         jdate = request.POST['jdate']
         gender = request.POST['gender']
         empaddress = request.POST['empaddress']
@@ -105,6 +108,7 @@ def profile(request):
         employee.empcode = ec
         employee.empdept = dept
         employee.designation = designation
+        employee.major = major
         employee.contact = contact
         employee.gender = gender
         employee.empaddress = empaddress
@@ -195,50 +199,47 @@ def edit_myskills(request):
 
 
 def user_signup(request):
-    if request.method == 'POST':
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        # Create a new user
-        user = UserSignup(firstname=firstname, lastname=lastname, username=email, password=password)
-        user.save()
-
-        return redirect('user_login')  # Redirect to login page after successful signup
-    else:
-        return render(request, 'user_signup.html')
+    error = ""
+    if request.method == "POST":
+        first_name = request.POST.get('firstname', '')
+        last_name = request.POST.get('lastname', '')
+        email = request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        try:
+            user_signup = UserSignup.objects.create(
+                firstname=first_name,
+                lastname=last_name,
+                email=email,
+                password=password
+            )
+            error = "no"
+        except:
+            error = "yes"
+    return render(request, 'user_signup.html', locals())
 
 
 def user_login(request):
-    error = None  # Initialize error variable
+    error = ""
     if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        try:
-            user = UserSignup.objects.get(email=email)
-        except UserSignup.DoesNotExist:
-            error = "yes"  # Set error to 'yes' if user does not exist
-            return render(request, 'user_login.html', {'error': error})
-
-        if user.password == password:
+        u = request.POST['email']
+        p = request.POST['password']
+        user = authenticate(username=u, password=p)
+        print(u)
+        print(p)
+        print(user)
+        if user:
             login(request, user)
-            request.session.set_expiry(1800)
             error = "no"
-            return render(request, 'user_login.html', {'error': error})
         else:
-            error = "yes"  # Set error to 'yes' if password does not match
-            return render(request, 'user_login.html', {'error': error})
-    else:
-        return render(request, 'user_login.html')
+            error = "yes"
+    return render(request, 'user_login.html', locals())
 
 
 def user_change_password(request):
     if not request.user.is_authenticated:
         return redirect('user_login')
     error = ""
-    user = request.user_signup
+    user = request.user
     if request.method == "POST":
         c = request.POST['currentpassword']
         n = request.POST['newpassword']
@@ -256,42 +257,42 @@ def user_change_password(request):
 
 def user_profile(request):
     if not request.user.is_authenticated:
-        return redirect('user_login')
+        return redirect('emp_login')
     error = ""
-    # Retrieve the UserSignup object associated with the user
-    user_signup = request.user.user_signup
+    user = request.user
+    employee = EmployeeDetail.objects.get(user=user)
     if request.method == "POST":
         fn = request.POST['firstname']
         ln = request.POST['lastname']
         contact = request.POST['contact']
-        ddate = request.POST['ddate']
+        bdate = request.POST['bdate']
         gender = request.POST['gender']
-        useraddress = request.POST['useraddress']
+        empaddress = request.POST['empaddress']
 
-        # Update the fields of UserSignup object
-        user_signup.first_name = fn
-        user_signup.last_name = ln
-        user_signup.contact = contact
-        user_signup.gender = gender
-        user_signup.useraddress = useraddress
+        employee.user.first_name = fn
+        employee.user.last_name = ln
+        employee.contact = contact
+        employee.gender = gender
+        employee.empaddress = empaddress
 
-        if ddate:
-            user_signup.dateofbirth = ddate
+        if bdate:
+            employee.birthdate = bdate
 
         try:
-            user_signup.save()
+            employee.save()
+            employee.user.save()
             error = "no"
         except:
             error = "yes"
     return render(request, 'user_profile.html', locals())
 
 
-
 def user_home(request):
     if not request.user.is_authenticated:
         return redirect('user_login')
 
-    return redirect(request, 'user_home.html')
+    return render(request, 'user_home.html')
+
 
 def admin_login(request):
     error = ""
@@ -340,6 +341,38 @@ def all_employees(request):
     return render(request, 'all_employees.html', locals())
 
 
+def user_employees(request):
+    if not request.user.is_authenticated:
+        return redirect('user_login')
+    employee = EmployeeDetail.objects.all()
+    return render(request, 'user_employees.html', locals())
+
+
 def edit_profile(request):
     if not request.user.is_authenticated:
         return redirect('admin_login')
+
+
+def employee_details(request):
+    employees = EmployeeDetail.objects.all()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.commenter = request.user
+            comment.save()
+            return redirect('employee_details')  # Redirect to the same page after comment submission
+    else:
+        form = CommentForm()
+    return render(request, 'employee_details.html', {'employees': employees, 'form': form})
+
+
+@login_required
+def post_comment(request, employee_id):
+    if request.method == 'POST':
+        employee = EmployeeDetail.objects.get(pk=employee_id)
+        content = request.POST.get('comment')
+        commenter = request.user
+        comment = Comment.objects.create(employee=employee, commenter=commenter, content=content)
+        return JsonResponse({'content': comment.content, 'created_at': comment.created_at.strftime("%Y-%m-%d %H:%M:%S")})
+    return redirect('user_employees')

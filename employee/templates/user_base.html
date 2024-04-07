@@ -58,6 +58,33 @@
     }
   </style>
 
+  <script src = "https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src = "https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src = "https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+<script src = "https://cdn.datatables.net/buttons/3.1.3/jsjzip.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src = "https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+<script>
+  $(document).ready(function() {
+  $('#example').DataTable( {
+      dom: 'Bfrtip',
+      buttons: [
+          'copyHtml5',
+          'excelHtml5',
+          'csvHtml5',
+          'pdfHtml5'
+      ]
+  } );
+} );
+</script>
+
+
 </head>
 <body>
 <div class="container-fluid">
@@ -69,6 +96,7 @@
         <a href="{% url 'user_home' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/user_home/' %} active {% endif %}">Dashboard</a>
         <a href="{% url 'user_profile' %}" class="list-group-item list-group-item-danger list-group-item-action text-center {% if request.path == '/user_profile/' %} active {% endif %}">Profile</a>
         <a href="{%url 'user_change_password' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/user_change_password/' %} active {% endif %}">Change Password</a>
+        <a href="{% url 'user_employees' %}" class="list-group-item list-group-item-success list-group-item-action text-center {% if request.path == '/user_employees/' %} active {% endif %}">See All Employees</a>
         <a href="{% url 'logout' %}" class="list-group-item list-group-item-warning list-group-item-action text-center">Logout</a>
       </div>
     </div>

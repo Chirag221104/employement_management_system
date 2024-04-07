@@ -1,0 +1,83 @@
+{% extends 'user_base.html' %}
+
+{% block main %}
+
+<div class="card shadow m-3">
+    <div class="card-body">
+        <h5 class="p-3 text-danger" style="border-bottom: 2px solid orange;">Employee Details</h5>
+
+        <div class="container-fluid">
+            <table class="table table-bordered table-hover" id="example">
+                <thead class="text-light bg-primary">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Emp Code</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email ID</th>
+                        <th>Contact No.</th>
+                        <th>Specialized in</th>
+                        <th>Comment</th> <!-- Added this column header -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in employee %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.empcode }}</td>
+                        <td>{{ i.user.first_name }}</td>
+                        <td>{{ i.user.last_name }}</td>
+                        <td>{{ i.user.username }}</td>
+                        <td>{{ i.contact }}</td>
+                        <td>{{ i.major }}</td>
+                        <td>
+                            <!-- Comment Form -->
+                            <form class="comment-form" method="post" data-employee-id="{{ i.id }}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <textarea class="form-control" name="comment" rows="2" placeholder="Add a comment"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Post</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<script>
+    $(document).ready(function() {
+        $('.comment-form').submit(function(e) {
+            e.preventDefault(); // Prevent the form from submitting traditionally
+            var form = $(this);
+            var employeeId = form.data('employee-id');
+            var formData = form.serialize(); // Serialize form data
+
+            $.ajax({
+                type: 'POST',
+                url: '/post-comment/' + employeeId + '/',
+                data: formData,
+                success: function(response) {
+                    // Update the comment section
+                    var commentTd = form.closest('td'); // Get the closest parent <td> element
+                    var commentsList = commentTd.find('.comments-list'); // Find the comments list within the <td>
+                    if (commentsList.length) {
+                        commentsList.append('<li>' + response.text + '</li>'); // Append the new comment
+                    } else {
+                        // Create a new <ul> if it doesn't exist
+                        commentTd.append('<ul class="comments-list"><li>' + response.text + '</li></ul>');
+                    }
+                    form.find('textarea').val(''); // Clear the textarea after posting the comment
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log(xhr.responseText); // Log any errors to the console
+                }
+            });
+        });
+    });
+</script>

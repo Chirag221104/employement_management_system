@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from employee.views import *
+from employee import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,5 +41,6 @@ urlpatterns = [
     path('admin_home/',admin_home,name='admin_home'),
     path('admin_change_password/',admin_change_password,name='admin_change_password'),
     path('all_employees/',all_employees,name='all_employees'),
-
+    path('user_employees/',user_employees,name='user_employees'),
+    path('post-comment/<int:employee_id>/', views.post_comment, name='post_comment'),
 ]

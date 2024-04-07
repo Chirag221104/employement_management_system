@@ -15,7 +15,9 @@ class EmployeeDetail(models.Model):
     designation = models.CharField(max_length=100, null=True)
     contact = models.CharField(max_length=15, null=True)
     gender = models.CharField(max_length=50, null=True)
+    major = models.CharField(max_length=50,null=True)
     joiningdate = models.DateField(null=True)
+    dateofbirth = models.DateField(null=True)
 
     def __str__(self):
         return self.user.username
@@ -57,5 +59,11 @@ class UserSignup(models.Model):
 
     def __str__(self):
         return self.email
+
+class Comment(models.Model):
+    employee = models.ForeignKey(EmployeeDetail, on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
